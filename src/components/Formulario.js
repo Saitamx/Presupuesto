@@ -1,48 +1,47 @@
 import React, { useState } from "react";
-import PropTypes from "prop-types";
+import Error from "./Error";
 import shortid from "shortid";
-import Error from "./Error"
+import PropTypes from "prop-types";
 
-const Formulario = ({guardarGasto, guardarCrearGasto}) => {
-  const [nombre, guardarNombre] = useState('');
-  const [cantidad, guardarCantidad] = useState(0);
-  const [error, guardarError] = useState(false);
+const Formulario = ({ setGasto, setCrearGasto }) => {
+  const [nombre, setNombre] = useState("");
+  const [cantidad, setCantidad] = useState(0);
+  const [error, setError] = useState(false);
 
-    // cuando el usuario agrega gastos
-    const agregarGasto = e => {
-        e.preventDefault();
+  // cuando el usuario agrega un gasto
+  const agregarGasto = (e) => {
+    e.preventDefault();
 
-        // validar 
-        if(cantidad < 1 || isNaN(cantidad) || nombre.trim() === ''){
-            guardarError(true);
-            return;
-        }
-
-        // construir gasto
-        const gasto = {
-            nombre,  
-            cantidad,
-            id: shortid.generate()
-        }
-        console.log(gasto);
-
-        // pasar el gasto al componente principal
-        guardarGasto(gasto);
-        guardarCrearGasto (true);
-
-        // resetear el formulario
-        guardarNombre("");
-        guardarCantidad(0);
-
+    // validar
+    if (cantidad < 1 || isNaN(cantidad) || nombre.trim() === "") {
+      setError(true);
+      return; // no olvidar poner
     }
-  
-  return (
-    <form
-        onSubmit = {agregarGasto}
-     >
-      <h2>Agrega tus gastos aquí</h2>
-      {error ? <Error mensaje ="Ambos campos son obligatorios o presupuesto es incorrecto"/> : null}
+    setError(false);
 
+    // construir gasto
+    const gasto = {
+      nombre,
+      cantidad,
+      id: shortid.generate(),
+    };
+    console.log(gasto);
+
+    // pasar el gasto al componente principal
+    setGasto(gasto);
+    setCrearGasto(true);
+
+    // resetear el formulario
+    setNombre("");
+    setCantidad(0);
+  };
+
+  return (
+    <form onSubmit={agregarGasto}>
+      <h2>Agrega tus gastos aquí</h2>
+      {error ? (
+        <Error mensaje="Ambos campos son obligatorios o Presupuesto" />
+      ) : null}
       <div className="campo">
         <label>Nombre Gasto</label>
         <input
@@ -50,21 +49,19 @@ const Formulario = ({guardarGasto, guardarCrearGasto}) => {
           className="u-full-width"
           placeholder="Ej. Transporte"
           value={nombre}
-          onChange={e => guardarNombre(e.target.value)}
+          onChange={(e) => setNombre(e.target.value)}
         />
       </div>
-
       <div className="campo">
         <label>Cantidad Gasto</label>
-        <input 
-            type="number" 
-            className="u-full-width" 
-            placeholder="Ej. 300" 
-            value={cantidad}
-            onChange={e => guardarCantidad(parseInt(e.target.value, 10))}
+        <input
+          type="number"
+          className="u-full-width"
+          placeholder="Ej. 300"
+          value={cantidad}
+          onChange={(e) => setCantidad(e.target.value)}
         />
       </div>
-
       <input
         type="submit"
         className="button-primary u-full-width"
@@ -75,8 +72,8 @@ const Formulario = ({guardarGasto, guardarCrearGasto}) => {
 };
 
 Formulario.propTypes = {
-    guardarGasto: PropTypes.func.isRequired,
-    guardarCrearGasto: PropTypes.func.isRequired
-}
+  setGasto: PropTypes.func.isRequired,
+  setCrearGasto: PropTypes.func.isRequired,
+};
 
 export default Formulario;

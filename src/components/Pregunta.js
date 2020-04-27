@@ -1,50 +1,46 @@
-import React, { Fragment, useState } from "react";
-import PropTypes from "prop-types";
+import React, { useState } from "react";
 import Error from "./Error";
+import PropTypes from "prop-types";
 
-const Pregunta = ({ guardarPresupuesto, guardarRestante, actualizarPregunta}) => {
-  // definir el state
-  const [cantidad, guardarCantidad] = useState(0);
-  const [error, guardarError] = useState(false);
+const Pregunta = ({ setPresupuesto, setRestante, setMostrarPregunta }) => {
+  // Definir el state
+  const [cantidad, setCantidad] = useState(0);
 
-  // Función que lee el presupuesto (primera forma)
-  const definirPresupuesto = e => {
-    //     // los input siempre vienen en forma de sting a pesar de declararlos como number
-    //     // console.log(parseInt(e.target.value))
-    guardarCantidad(parseInt(e.target.value, 10));
+  // Funcion que lee el presupuesto
+  const definirPresupuesto = (e) => {
+    setCantidad(parseInt(e.target.value, 10));
   };
 
+  const [error, setError] = useState(false);
+
   // submit para definir el presupuesto
-  const agregarPresupuesto = e => {
+  const agregarPresupuesto = (e) => {
+    // para no cambiar la url y no recargar la pagina
     e.preventDefault();
 
     // validar
     if (cantidad < 1 || isNaN(cantidad)) {
-      guardarError(true);
+      setError(true);
       return;
     }
 
-    // si se pasa la validación
-    guardarError(false);
-    guardarPresupuesto(cantidad);
-    guardarRestante(cantidad);
-    actualizarPregunta(false);
-  }
+    // al pasar la validación
+    setError(false);
+    setPresupuesto(cantidad);
+    setRestante(cantidad);
+    setMostrarPregunta(false);
+  };
 
   return (
-    <Fragment>
+    <>
       <h2>Coloca tu presupuesto</h2>
-      {error ? <Error mensaje="El presupuesto es incorrecto" /> : null}
-
+      {error ? <Error mensaje="El Presupuesto es Incorrecto" /> : null}
       <form onSubmit={agregarPresupuesto}>
         <input
           type="number"
           className="u-full-width"
           placeholder="Coloca tu presupuesto"
-          // para primera forma
           onChange={definirPresupuesto}
-          // segunda forma
-          // onChange={e => guardarCantidad(parseInt(e.target.value, 10))}
         />
 
         <input
@@ -53,14 +49,14 @@ const Pregunta = ({ guardarPresupuesto, guardarRestante, actualizarPregunta}) =>
           value="Definir Presupuesto"
         />
       </form>
-    </Fragment>
+    </>
   );
 };
 
 Pregunta.propTypes = {
-    guardarPresupuesto: PropTypes.func.isRequired,
-    guardarRestante: PropTypes.func.isRequired,
-    actualizarPregunta: PropTypes.func.isRequired
-}
+  setPresupuesto: PropTypes.func.isRequired,
+  setRestante: PropTypes.func.isRequired,
+  setMostrarPregunta: PropTypes.func.isRequired,
+};
 
 export default Pregunta;

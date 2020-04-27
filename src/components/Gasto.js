@@ -5,13 +5,13 @@ const Gasto = ({ gasto }) => (
   <li className="gastos">
     <p>
       {gasto.nombre}
-      <span className="gasto"> $ {gasto.cantidad}</span>
+      <span className="gasto">$ {gasto.cantidad}</span>
     </p>
   </li>
 );
 
 Gasto.propTypes = {
-    gasto: PropTypes.object.isRequired
-}
+  gasto: PropTypes.object.isRequired,
+};
 
 export default Gasto;
